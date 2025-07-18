@@ -40,10 +40,6 @@ TDMASystem::TDMASystem() {
     b_x_v[Nx-2]  =  1.0 + 4.0 * coef_x;
     c_x_v[0]     = -4.0 / 3.0 * coef_x;
     c_x_v[Nx-2]  = -8.0 / 3.0 * coef_x;
-
-    std::vector<double> a_tmp;
-    std::vector<double> b_tmp;
-    std::vector<double> c_tmp;
 }
 
 void TDMASystem::update_rhs(std::vector<double>& rhs_1, std::vector<double>& rhs_2) {

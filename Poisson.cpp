@@ -15,8 +15,10 @@ Poisson::Poisson() {
 
 void Poisson::poisson_solve(std::vector<double>& div, std::vector<double>& phi) {
 
+    int i, j;
+
     double pi = 3.14159265358979323846;
-    double omega = 2.0/(1.0 + 2.0*pi/(My + Mx));
+    double omega = 2.0/(1.0 + pi/(My));
 
     int maxiter = 10000;
     double rsme;
@@ -44,8 +46,56 @@ void Poisson::poisson_solve(std::vector<double>& div, std::vector<double>& phi) 
             }
         }
 
+        // // vertex
+        // phi_old[IDX(1, 1, Nx+1)] = phi[IDX(1, 1, Nx+1)];
+        // phi[IDX(1, 1, Nx+1)] = (1-omega) * phi[IDX(1, 1, Nx+1)] + omega * ( phi[IDX(2, 1, Nx+1)] + phi[IDX(1, 2, Nx+1)]  - dx2 * div[IDX(1, 1, Nx+1)]) / 2.0;
+
+        // phi_old[IDX(1, Ny-1, Nx+1)] = phi[IDX(1, Ny-1, Nx+1)];
+        // phi[IDX(1, Ny-1, Nx+1)] = (1-omega) * phi[IDX(1, Ny-1, Nx+1)] + omega * ( phi[IDX(2, Ny-1, Nx+1)] + phi[IDX(1, Ny-2, Nx+1)]  - dx2 * div[IDX(1, Ny-1, Nx+1)]) / 2.0;
+
+        // phi_old[IDX(Nx-1, 1, Nx+1)] = phi[IDX(Nx-1, 1, Nx+1)];
+        // phi[IDX(Nx-1, 1, Nx+1)] = (1-omega) * phi[IDX(Nx-1, 1, Nx+1)] + omega * ( phi[IDX(Nx-1, 2, Nx+1)] + phi[IDX(Nx-2, 1, Nx+1)]  - dx2 * div[IDX(Nx-1, 1, Nx+1)]) / 2.0;
+
+        // phi_old[IDX(Nx-1, Ny-1, Nx+1)] = phi[IDX(Nx-1, Ny-1, Nx+1)];
+        // phi[IDX(Nx-1, Ny-1, Nx+1)] = (1-omega) * phi[IDX(Nx-1, Ny-1, Nx+1)] + omega * ( phi[IDX(Nx-1, Ny-2, Nx+1)] + phi[IDX(Nx-2, Ny-1, Nx+1)]  - dx2 * div[IDX(Nx-1, Ny-1, Nx+1)]) / 2.0;
+
+        // // side
+        // for (j=2; j<Ny-1; ++j) {
+        //     phi_old[IDX(1, j, Nx+1)] = phi[IDX(1, j, Nx+1)];
+        //     phi[IDX(1, j, Nx+1)] = (1-omega) * phi[IDX(1, j, Nx+1)] + omega * ( phi[IDX(2, j, Nx+1)] + phi[IDX(1, j+1, Nx+1)] + phi[IDX(1, j-1, Nx+1)] - dx2 * div[IDX(1, j, Nx+1)] ) / 3.0;
+
+        //     phi_old[IDX(Nx-1, j, Nx+1)] = phi[IDX(Nx-1, j, Nx+1)];
+        //     phi[IDX(Nx-1, j, Nx+1)] = (1-omega) * phi[IDX(Nx-1, j, Nx+1)] + omega * ( phi[IDX(Nx-2, j, Nx+1)] + phi[IDX(Nx-1, j+1, Nx+1)] + phi[IDX(Nx-1, j-1, Nx+1)] - dx2 * div[IDX(Nx-1, j, Nx+1)] ) / 3.0;
+        // }
+        // for (i=2; i<Nx-1; ++i) {
+        //     phi_old[IDX(i, 1, Nx+1)] = phi[IDX(i, 1, Nx+1)];
+        //     phi[IDX(i, 1, Nx+1)] = (1-omega) * phi[IDX(i, 1, Nx+1)] + omega * ( phi[IDX(i, 2, Nx+1)] + phi[IDX(i+1, 1, Nx+1)] + phi[IDX(i-1, 1, Nx+1)] - dx2 * div[IDX(i, 1, Nx+1)] ) / 3.0;
+            
+        //     phi_old[IDX(i, Ny-1, Nx+1)] = phi[IDX(i, Ny-1, Nx+1)];
+        //     phi[IDX(i, Ny-1, Nx+1)] = (1-omega) * phi[IDX(i, Ny-1, Nx+1)] + omega * ( phi[IDX(i, Ny-2, Nx+1)] + phi[IDX(i+1, Ny-1, Nx+1)] + phi[IDX(i-1, Ny-1, Nx+1)] - dx2 * div[IDX(i, Ny-1, Nx+1)] ) / 3.0;
+        // }
+
+        // // inside
+        // for (j=2; j<Ny-1; ++j) {
+        //     for (i=2; i<Nx-1; ++i) {
+        //         phi_old[IDX(i, j, Nx+1)] = phi[IDX(i, j, Nx+1)];
+        //         phi[IDX(i, j, Nx+1)] = (1-omega) * phi[IDX(i, j, Nx+1)] + omega * (
+        //                                         phi[IDX(i+1, j, Nx+1)] +
+        //                                         phi[IDX(i-1, j, Nx+1)] +
+        //                                         phi[IDX(i, j+1, Nx+1)] +
+        //                                         phi[IDX(i, j-1, Nx+1)]
+        //                                         - dx2 * div[IDX(i, j, Nx+1)]
+        //                                     ) / 4.0;    
+        //     }
+        // }
+
+        // for (j=1; j<Ny; ++j) {
+        //     for (i=1; i<Nx; ++i) {
+        //         rsme = std::max(rsme, std::fabs(phi_old[IDX(i, j, Nx+1)] - phi[IDX(i, j, Nx+1)]));
+        //     }
+        // }
+
         if (rsme < tol) {
-            // std::cout << "poisson iteration:" << iter << "| Error = " << rsme << std::endl;
             break;
         }
     }

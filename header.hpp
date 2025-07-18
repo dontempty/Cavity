@@ -4,8 +4,8 @@
 #define IDX(i, j, nx) ((j) * (nx) + (i))
 
 // Mesh
-#define Mx 32
-#define My 32
+#define Mx 128
+#define My 128
 #define Nx (Mx+1)
 #define Ny (My+1)
 #define x0 0.0
@@ -28,10 +28,10 @@
 // Time
 #define dt ( cfl * dx / U )
 #define t0 0.0
-#define Nt 50000
+#define Nt 30000
 #define tN (dt * Nt) 
 
-#define coef_x ( dt / (2 * Re * dx*dx) )
-#define coef_y ( dt / (2 * Re * dy*dy) )
+#define coef_x ( dt / (2.0 * Re * dx*dx) )
+#define coef_y ( dt / (2.0 * Re * dy*dy) )
 
 #endif // HEADER_H

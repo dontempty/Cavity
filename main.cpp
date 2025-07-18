@@ -51,14 +51,16 @@ int main() {
     int t;
     int vervose = 0;
     int check_num = 100;
-    std::chrono::system_clock::time_point start_step; // 시작 시간
-    std::chrono::duration<double> end_sec; // 걸린 시간간
+    std::chrono::system_clock::time_point start_step1, start_step2; // 시작 시간
+    std::chrono::duration<double> end_sec1, end_sec2; // 걸린 시간간
+
+    start_step1 = std::chrono::system_clock::now();
     for (t=1; t<Nt+1; ++t) {
 
         if (t%check_num==0) {
             vervose = 1;
             std::cout << "Re=" << Re <<", iter:"<< t << "------------------------"<< std::endl; 
-            start_step = std::chrono::system_clock::now();
+            start_step2 = std::chrono::system_clock::now();
         }
         else {
             vervose = 0;
@@ -77,16 +79,16 @@ int main() {
         // u_1 = u, u += du
         for (int j=1; j<Ny; ++j) {
             for (int i=1; i<Nx-1; ++i) {
-                u_1[IDX(i, j, Nx)] = u[IDX(i, j, Nx)];
-                u[IDX(i, j, Nx)] += du[IDX(i, j, Nx)];
+                u_1[IDX(i, j, Nx)]  =  u[IDX(i, j, Nx)];
+                  u[IDX(i, j, Nx)] += du[IDX(i, j, Nx)];
             }
         }
 
         // v_1 = v, v += dv
         for (int j=1; j<Ny-1; ++j) {
             for (int i=1; i<Nx; ++i) {
-                v_1[IDX(i, j, Nx+1)] = v[IDX(i, j, Nx+1)];
-                v[IDX(i, j, Nx+1)] += dv[IDX(i, j, Nx+1)];
+                v_1[IDX(i, j, (Nx+1))]  =  v[IDX(i, j, (Nx+1))];
+                  v[IDX(i, j, (Nx+1))] += dv[IDX(i, j, (Nx+1))];
             }
         }
 
@@ -151,10 +153,13 @@ int main() {
         // vervose
         if (vervose) {
             std::cout << "t = " << t << " | Error = " << u_error+v_error << std::endl;
-            end_sec = std::chrono::system_clock::now() - start_step;
-            std::cout << "1 iter time: " << end_sec.count() <<" seconds"<< std::endl;
+            end_sec2 = std::chrono::system_clock::now() - start_step2;
+            std::cout << "1 iter time: " << end_sec2.count() <<" seconds"<< std::endl;
             save_rhs_to_csv(u, Nx, Ny+1, "RE_" + std::to_string(static_cast<int>(Re)) + "_" + std::to_string(Mx), "u_" + std::to_string(t) + ".csv", 15);
             save_rhs_to_csv(v, Nx+1, Ny, "RE_" + std::to_string(static_cast<int>(Re)) + "_" + std::to_string(Mx), "v_" + std::to_string(t) + ".csv", 15);
         }
     }
+
+    end_sec1 = std::chrono::system_clock::now() - start_step1;
+    std::cout << "1 iter time: " << end_sec1.count() <<" seconds"<< std::endl;
 }

@@ -27,16 +27,24 @@ void make_Momentum(std::vector<double>& u, std::vector<double>& v, std::vector<d
             if (j==Ny-1) {
                 uv_up   = (  u[IDX(i, j+1, Nx)]) * (  v[IDX(i+1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) / 2.0;
                 uv_up_1 = (u_1[IDX(i, j+1, Nx)]) * (v_1[IDX(i+1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) / 2.0;
+
+                uv_down   = (  u[IDX(i, j-1, Nx)] +   u[IDX(i, j, Nx)]) * (  v[IDX(i+1, j-1, Nx+1)] +   v[IDX(i, j-1, Nx+1)]) / 4.0;
+                uv_down_1 = (u_1[IDX(i, j-1, Nx)] + u_1[IDX(i, j, Nx)]) * (v_1[IDX(i+1, j-1, Nx+1)] + v_1[IDX(i, j-1, Nx+1)]) / 4.0;
+
                 Momentum_x[IDX(i, j, Nx)] = 2.0 * coef_y * (4.0/3.0) * (2.0*u[IDX(i, j+1, Nx)] - 3.0*u[IDX(i, j, Nx)] + u[IDX(i, j-1, Nx)]);
             }
             else if (j==1) {
+                uv_up     = (  u[IDX(i, j+1, Nx)] +   u[IDX(i, j, Nx)]) * (  v[IDX(i+1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) / 4.0;
+                uv_up_1   = (u_1[IDX(i, j+1, Nx)] + u_1[IDX(i, j, Nx)]) * (v_1[IDX(i+1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) / 4.0;
+
                 uv_down   = (  u[IDX(i, j-1, Nx)]) * (  v[IDX(i+1, j-1, Nx+1)] +   v[IDX(i, j-1, Nx+1)]) / 2.0;
                 uv_down_1 = (u_1[IDX(i, j-1, Nx)]) * (v_1[IDX(i+1, j-1, Nx+1)] + v_1[IDX(i, j-1, Nx+1)]) / 2.0;
+
                 Momentum_x[IDX(i, j, Nx)] = 2.0 * coef_y * (4.0/3.0) * (u[IDX(i, j+1, Nx)] - 3.0*u[IDX(i, j, Nx)] + 2.0*u[IDX(i, j-1, Nx)]);
             }
             else {
-                uv_up   = (  u[IDX(i, j+1, Nx)] +   u[IDX(i, j, Nx)]) * (  v[IDX(i+1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) / 4.0;
-                uv_up_1 = (u_1[IDX(i, j+1, Nx)] + u_1[IDX(i, j, Nx)]) * (v_1[IDX(i+1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) / 4.0;
+                uv_up     = (  u[IDX(i, j+1, Nx)] +   u[IDX(i, j, Nx)]) * (  v[IDX(i+1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) / 4.0;
+                uv_up_1   = (u_1[IDX(i, j+1, Nx)] + u_1[IDX(i, j, Nx)]) * (v_1[IDX(i+1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) / 4.0;
 
                 uv_down   = (  u[IDX(i, j-1, Nx)] +   u[IDX(i, j, Nx)]) * (  v[IDX(i+1, j-1, Nx+1)] +   v[IDX(i, j-1, Nx+1)]) / 4.0;
                 uv_down_1 = (u_1[IDX(i, j-1, Nx)] + u_1[IDX(i, j, Nx)]) * (v_1[IDX(i+1, j-1, Nx+1)] + v_1[IDX(i, j-1, Nx+1)]) / 4.0;
@@ -64,19 +72,27 @@ void make_Momentum(std::vector<double>& u, std::vector<double>& v, std::vector<d
         for (i=1; i<Nx; ++i) {
 
             // -dt/2 * (3H_{n} - H_{n-1}) + 2 * (A_x + A_y) * v_{n}
-            v2_up   = ( pow(  v[IDX(i, j+1, Nx+1)], 2) + pow(  v[IDX(i, j, Nx+1)], 2) );
-            v2_up_1 = ( pow(v_1[IDX(i, j+1, Nx+1)], 2) + pow(v_1[IDX(i, j, Nx+1)], 2) );
-            v2_down   = ( pow(  v[IDX(i, j-1, Nx+1)], 2) + pow(  v[IDX(i, j, Nx+1)], 2) );
-            v2_down_1 = ( pow(v_1[IDX(i, j-1, Nx+1)], 2) + pow(v_1[IDX(i, j, Nx+1)], 2) );   
+            v2_up     = ( pow(  v[IDX(i, j+1, Nx+1)], 2) + pow(  v[IDX(i, j, Nx+1)], 2) ) / 2.0;
+            v2_up_1   = ( pow(v_1[IDX(i, j+1, Nx+1)], 2) + pow(v_1[IDX(i, j, Nx+1)], 2) ) / 2.0;
+            v2_down   = ( pow(  v[IDX(i, j-1, Nx+1)], 2) + pow(  v[IDX(i, j, Nx+1)], 2) ) / 2.0;
+            v2_down_1 = ( pow(v_1[IDX(i, j-1, Nx+1)], 2) + pow(v_1[IDX(i, j, Nx+1)], 2) ) / 2.0;   
 
             if (i==Nx-1) {
                 vu_ri   = (  v[IDX(i+1, j, Nx+1)]) * (  u[IDX(i, j+1, Nx)] +   u[IDX(i, j, Nx)]) / 2.0;
                 vu_ri_1 = (v_1[IDX(i+1, j, Nx+1)]) * (u_1[IDX(i, j+1, Nx)] + u_1[IDX(i, j, Nx)]) / 2.0;
+
+                vu_le   = (  v[IDX(i-1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) * (  u[IDX(i-1, j+1, Nx)] +   u[IDX(i-1, j, Nx)]) / 4.0;
+                vu_le_1 = (v_1[IDX(i-1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) * (u_1[IDX(i-1, j+1, Nx)] + u_1[IDX(i-1, j, Nx)]) / 4.0;
+
                 Momentum_y[IDX(i, j, Nx+1)] = 2.0 * coef_x * (4.0/3.0) * (2.0*v[IDX(i+1, j, Nx+1)] - 3.0*v[IDX(i, j, Nx+1)] + v[IDX(i-1, j, Nx+1)]);
             }
             else if (i==1) {
+                vu_ri   = (  v[IDX(i+1, j, Nx+1)] +   v[IDX(i, j, Nx+1)]) * (  u[IDX(i, j+1, Nx)] +   u[IDX(i, j, Nx)]) / 4.0;
+                vu_ri_1 = (v_1[IDX(i+1, j, Nx+1)] + v_1[IDX(i, j, Nx+1)]) * (u_1[IDX(i, j+1, Nx)] + u_1[IDX(i, j, Nx)]) / 4.0;
+
                 vu_le   = (  v[IDX(i-1, j, Nx+1)]) * (  u[IDX(i-1, j+1, Nx)] +   u[IDX(i-1, j, Nx)]) / 2.0;
                 vu_le_1 = (v_1[IDX(i-1, j, Nx+1)]) * (u_1[IDX(i-1, j+1, Nx)] + u_1[IDX(i-1, j, Nx)]) / 2.0;
+                
                 Momentum_y[IDX(i, j, Nx+1)] = 2.0 * coef_x * (4.0/3.0) * (v[IDX(i+1, j, Nx+1)] - 3.0*v[IDX(i, j, Nx+1)] + 2.0*v[IDX(i-1, j, Nx+1)]);
             }
             else {

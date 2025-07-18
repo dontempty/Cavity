@@ -38,10 +38,10 @@ inline void save_rhs_to_csv(const std::vector<double>& rhs,
     ofs << std::fixed << std::setprecision(precision);
 
     // 5) CSV로 쓰기
-    for (int j = 0; j < ny; ++j) {
-        for (int i = 0; i < nx; ++i) {
-            ofs << rhs[j*nx + i];
-            if (i < nx - 1) ofs << ',';
+    for (int j = 0; j < (ny); ++j) {
+        for (int i = 0; i < (nx); ++i) {
+            ofs << rhs[j*(nx) + i];
+            if (i < (nx )- 1) ofs << ',';
         }
         ofs << '\n';
     }
